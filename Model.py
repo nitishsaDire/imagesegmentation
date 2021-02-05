@@ -14,6 +14,8 @@ class UNET_resnet34(nn.Module):
         self.resnet_layers = list(self.resnet.children())
         self.upsample = nn.Upsample(scale_factor=2, mode='nearest')
         self.sigmoid = nn.Sigmoid()
+        use_cuda = torch.cuda.is_available()  # check if GPU exists
+        self.device = torch.device("cuda" if use_cuda else "cpu")  # use CPU or GPU
 
     def conv2d(self, in_channels, out_channels, kernel = 1, stride=1, padding=0):
         return nn.Sequential(

@@ -36,7 +36,8 @@ def main():
     device = torch.device("cuda" if use_cuda else "cpu")  # use CPU or GPU
     print(device)
 
-    unetModel = UNET_resnet34(32).to(device)
+    unetModel = UNET_resnet34(32)
+    unetModel = unetModel.to(device)
 
     optimizer = torch.optim.Adam(list(unetModel.parameters()), lr=0.001)
 
