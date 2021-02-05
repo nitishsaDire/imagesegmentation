@@ -173,7 +173,9 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
             # }, PATH)
 
             index = 10
-            x, y = next(iter(dataloader['val']))[index]
+            val = next(iter(dataloader['val']))
+            print(len(val))
+            x, y = val[index]
             x = x.to(device)
             y = y.to(device)
 
