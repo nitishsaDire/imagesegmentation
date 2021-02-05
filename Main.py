@@ -11,11 +11,11 @@ import matplotlib.pyplot as plt
 # date 05/feb/2021
 
 def main():
-    # import argparse
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument("loadModelFlag", help="flag for loading model",
-    #                     type=int)
-    # args = parser.parse_args()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("loadModelFlag", help="flag for loading model",
+                        type=int)
+    args = parser.parse_args()
 
     image_path ='/root/.fastai/data/camvid/images/'
     extensions = [".jpg", ".png"]
@@ -36,7 +36,7 @@ def main():
     device = torch.device("cuda" if use_cuda else "cpu")  # use CPU or GPU
     print(device)
 
-    unetModel = UNET_resnet34(30).to(device)
+    unetModel = UNET_resnet34(32).to(device)
 
     optimizer = torch.optim.Adam(list(unetModel.parameters()), lr=0.001)
 
@@ -121,9 +121,9 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                             # track history if only in train
                             with torch.set_grad_enabled(phase == 'train'):
                                 outputs = unet(inputs)
-
+                                print(outputs.shape)
                                 _, preds = torch.max(outputs, 1)
-                                loss = F.cross_entropy(outputs, labels)
+                                loss = F.cross_entropy(preds, labels)
                                 # backward + optimize only if in training phase
                                 if phase == 'train':
                                     loss.backward()
@@ -155,12 +155,12 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                         best_acc = epoch_acc
                         # best_model_wts_cnn, best_model_wts_lstm = copy.deepcopy(unet.state_dict()), copy.deepcopy(lstm.state_dict())
 
-            torch.save({
-                'epoch': epoch,
-                'cnn_state_dict': unet.state_dict(),
-                'optimizer_state_dict': optimizer.state_dict(),
-                'loss': loss
-            }, PATH)
+            # torch.save({
+            #     'epoch': epoch,
+            #     'cnn_state_dict': unet.state_dict(),
+            #     'optimizer_state_dict': optimizer.state_dict(),
+            #     'loss': loss
+            # }, PATH)
 
             time_elapsed = time.time() - epoch_b
             print('epoch completed in {:.0f}m {:.0f}s'.format(

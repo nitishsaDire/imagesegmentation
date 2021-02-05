@@ -9,12 +9,11 @@ from sklearn import preprocessing
 # date 05/feb/2021
 
 class ImageDataset(Dataset):
-    def __init__(self, images_path, labels_path, extensions):
+    def __init__(self, images_path, extensions):
         # self.path = datasets.untar_data(datasets.URLs.CAMVID)
         self.images_path = images_path
-        self.labels_path = labels_path
         self.extensions = extensions
-        imageFiles, labelFiles = ImageFiles(self.images_path, self.extensions), ImageFiles(self.labels_path, self.extensions)
+        imageFiles = ImageFiles(self.images_path, self.extensions)
         self.imageFilesPaths = imageFiles.get_files_paths()
         self.n = len(self.imageFilesPaths)
         self.le = preprocessing.LabelEncoder()

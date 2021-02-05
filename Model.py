@@ -42,6 +42,8 @@ class UNET_resnet34(nn.Module):
         x2d = self.conv2d(128, 64, kernel=3, padding=1)(torch.cat((x2e, self.conv2d(128,  64)(self.upsample(x3d))), 1))              #56x56,    64
         x1d = self.conv2d(128, 64, kernel=3, padding=1)(torch.cat((x1e, self.upsample(x2d)), 1))                                     #112x112,  64
 
-        return self.conv2d(64, self.n_classes)(self.upsample(x1d))
+        final = self.conv2d(64, self.n_classes)(self.upsample(x1d))
+
+        return nn.Sigmoid(final)
 
 
