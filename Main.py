@@ -98,6 +98,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
 
             # Each epoch has a training and validation phase
             for phase in ['train', 'val']:
+                    unet = unet.to(device)
                     if phase == 'train':
                         unet.train()  # Set model to training mode
                     else:
