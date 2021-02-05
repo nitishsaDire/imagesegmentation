@@ -138,7 +138,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
 
                             # statistics
                             running_loss += loss.item() * inputs.size(0)
-                            running_corrects += torch.mean(preds == labels.data)
+                            running_corrects += torch.sum(preds == labels.data)/(224*224)
                             print(torch.sum(preds == labels.data), running_corrects)
                             if count%10 == 0:
                                 time_elapsed = time.time() - it_begin
