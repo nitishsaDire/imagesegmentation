@@ -1,4 +1,4 @@
-from fastai.data.external import untar_data, URLs
+from fastai import *
 from torch.utils.data.dataset import Dataset
 from torchvision import transforms
 from .ImageFile import *
