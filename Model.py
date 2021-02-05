@@ -13,6 +13,7 @@ class UNET_resnet34(nn.Module):
         self.resnet = models.resnet34(pretrained=True)
         self.resnet_layers = list(self.resnet.children())
         self.upsample = nn.Upsample(scale_factor=2, mode='nearest')
+        self.sigmoid = nn.Sigmoid()
 
     def conv2d(self, in_channels, out_channels, kernel = 1, stride=1, padding=0):
         return nn.Sequential(
@@ -44,6 +45,4 @@ class UNET_resnet34(nn.Module):
 
         final = self.conv2d(64, self.n_classes)(self.upsample(x1d))
 
-        return nn.Sigmoid(final)
-
-
+        return self.sigmoid(final)

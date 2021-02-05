@@ -45,7 +45,7 @@ class ImageDataset(Dataset):
         return image
 
     def __getitem__(self, index):
-        print(index)
+        # print(index)
         image, label = self.get_image(index), self.get_label_image(index)
         return image,label
 
