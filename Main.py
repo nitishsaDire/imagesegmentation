@@ -176,12 +176,12 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
             val = next(iter(dataloader['val']))
             print(len(val))
             x, y = val
-            x = x.to(device)
-            y = y.to(device)
+            x_ = x[0].to(device)
+            y_ = y[0].to(device)
 
-            print(x.shape, y.shape)
+            print(x_.shape, y_.shape)
 
-            plt.imshow(ground_masks_to_colorimg(y)/255.)
+            plt.imshow(ground_masks_to_colorimg(y_)/255.)
             time_elapsed = time.time() - epoch_b
             print('epoch completed in {:.0f}m {:.0f}s'.format(
                 time_elapsed // 60, time_elapsed % 60))
