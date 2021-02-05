@@ -18,6 +18,6 @@ class ImageFiles:
                 print(path+name)
                 for e in self.extensions:
                     if name.endswith(e):
-                        imageFilePath = path + "/" + name
+                        imageFilePath = path + name
                         imageFiles.append(imageFilePath)
         return  imageFiles

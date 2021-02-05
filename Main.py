@@ -11,11 +11,11 @@ import matplotlib.pyplot as plt
 # date 05/feb/2021
 
 def main():
-    import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument("loadModelFlag", help="flag for loading model",
-                        type=int)
-    args = parser.parse_args()
+    # import argparse
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument("loadModelFlag", help="flag for loading model",
+    #                     type=int)
+    # args = parser.parse_args()
 
     image_path ='/root/.fastai/data/camvid/images/'
     extensions = [".jpg", ".png"]

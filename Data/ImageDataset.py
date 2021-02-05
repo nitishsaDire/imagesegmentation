@@ -1,10 +1,9 @@
+from fastai.data.external import untar_data, URLs
 from torch.utils.data.dataset import Dataset
 from torchvision import transforms
 from .ImageFile import *
 from PIL import Image
 from sklearn import preprocessing
-from fastai import *
-from fastai.vision import *
 
 # created by Nitish Sandhu
 # date 05/feb/2021
@@ -17,7 +16,6 @@ class ImageDataset(Dataset):
         self.extensions = extensions
         imageFiles, labelFiles = ImageFiles(self.images_path, self.extensions), ImageFiles(self.labels_path, self.extensions)
         self.imageFilesPaths = imageFiles.get_files_paths()
-        self.labelFilesPaths = labelFiles.get_files_paths()
         self.n = len(self.imageFilesPaths)
         self.le = preprocessing.LabelEncoder()
         self.transforms = transforms.Compose([transforms.Resize((224, 224)),
@@ -35,17 +33,20 @@ class ImageDataset(Dataset):
 
 
     def get_label_image(self, index):
-        label = Image.open(self.imageFilesPaths[index])
-        label = self.transform(label) * 255. // 1.
+        # '/home/nitish/.fastai/data/camvid/images/Seq05VD_f04500.png'
+        # '/home/nitish/.fastai/data/camvid/labels/Seq05VD_f04500_P.png'
+        label_file = self.imageFilesPaths[index].replace('/images/', '/labels/')
+        label = Image.open(label_file[:-4] + '_P' + label_file[-4:])
+        label = self.transforms(label).squeeze() * 255. // 1.
         return label
 
     def get_image(self, index):
         image = Image.open(self.imageFilesPaths[index])
-        image = self.normalize(self.transform(image))
+        image = self.normalize(self.transforms(image))
         return image
 
     def __getitem__(self, index):
-        image, label = self.get_image(self.imageFilesPaths[index]), self.get_label_image(self.labelFilesPaths[index])
+        image, label = self.get_image(index), self.get_label_image(index)
         return image,label
 
     def __len__(self):
