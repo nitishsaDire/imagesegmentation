@@ -19,8 +19,8 @@ def main():
 
     image_path ='/root/.fastai/data/camvid/images/'
     extensions = [".jpg", ".png"]
-    label_path = '/root/.fastai/data/camvid/labels/'
-    imageDataset = ImageDataset(image_path, label_path, extensions)
+
+    imageDataset = ImageDataset(image_path, extensions)
 
     train_size = int(0.8 * len(imageDataset))
     val_size = len(imageDataset) - train_size
