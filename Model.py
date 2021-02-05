@@ -22,7 +22,7 @@ class UNET_resnet34(nn.Module):
             nn.Conv2d(in_channels, out_channels, kernel_size=kernel, stride=stride, padding = padding),
             nn.BatchNorm2d(out_channels),
             nn.Dropout2d(p=self.dropout_p),
-            nn.ReLU())
+            nn.ReLU()).to(self.device)
 
     def forward(self, x):
         """
