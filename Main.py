@@ -5,6 +5,7 @@ from Model import UNET_resnet34
 import torch.nn.functional as F
 import time
 import gc
+import numpy as np
 import matplotlib.pyplot as plt
 
 # created by Nitish Sandhu
@@ -131,6 +132,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                 # print(preds.shape)
                                 # print(labels.shape)
                                 loss = F.cross_entropy(outputs.to(device), labels.type(torch.LongTensor).to(device))
+
                                 # backward + optimize only if in training phase
                                 if phase == 'train':
                                     loss.backward()
@@ -170,6 +172,14 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
             #     'loss': loss
             # }, PATH)
 
+            index = 10
+            x, y = next(iter(dataloader['val']))[index]
+            x = x.to(device)
+            y = y.to(device)
+
+            print(x.shape, y.shape)
+
+            plt.imshow(ground_masks_to_colorimg(y)/255.)
             time_elapsed = time.time() - epoch_b
             print('epoch completed in {:.0f}m {:.0f}s'.format(
                 time_elapsed // 60, time_elapsed % 60))
@@ -186,6 +196,46 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
     print('Best val Acc: {:4f}'.format(best_acc))
 
     return unet
+
+
+color = [list(np.random.choice(range(256), size=3)) for _ in range(32)]
+
+def ground_masks_to_colorimg(masks):
+    colors = color
+    # np.asarray([(242, 207, 1), (160, 194, 56), (201, 58, 64), (0, 152, 75), (101, 172, 228),(56, 34, 132)])
+
+    colorimg = np.ones((masks.shape[1], masks.shape[2], 3), dtype=np.float32) * 255
+    channels, height, width = masks.shape
+    count = 0
+    for y in range(height):
+        for x in range(width):
+            # print(int(masks[:,y,x]))
+            selected_colors = colors[int(masks[:,y,x])]
+            # print(selected_colors)
+            # if len(selected_colors) > 0:
+            #     count +=1
+            colorimg[y,x,:] = selected_colors
+    print(colorimg.min(), colorimg.max())
+
+    return colorimg
+
+def masks_to_colorimg(masks):
+    colors = color
+
+    colorimg = np.ones((masks.shape[1], masks.shape[2], 3), dtype=np.float32) * 255
+    channels, height, width = masks.shape
+
+    for y in range(height):
+        for x in range(width):
+            selected_colors = colors[masks[:,y,x] > 0.5]
+
+            if len(selected_colors) > 0:
+                colorimg[y,x,:] = np.mean(selected_colors, axis=0)
+
+    return colorimg.astype(np.uint8)
+
+
+
 
 if __name__ == '__main__':
     main()
