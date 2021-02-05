@@ -6,6 +6,9 @@ from sklearn import preprocessing
 from fastai import *
 from fastai.vision import *
 
+# created by Nitish Sandhu
+# date 05/feb/2021
+
 class ImageDataset(Dataset):
     def __init__(self, images_path, labels_path, extensions):
         self.path = untar_data(URLs.CAMVID)

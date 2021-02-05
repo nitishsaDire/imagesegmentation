@@ -7,6 +7,8 @@ import time
 import gc
 import matplotlib.pyplot as plt
 
+# created by Nitish Sandhu
+# date 05/feb/2021
 
 def main():
     import argparse

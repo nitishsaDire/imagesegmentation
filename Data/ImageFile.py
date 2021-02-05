@@ -1,6 +1,9 @@
 import re
 import os
 
+# created by Nitish Sandhu
+# date 05/feb/2021
+
 class ImageFiles:
     '''It gives all the video files names recursively in the root path along with their labels'''
     def __init__(self, image_root_path, extensions):
