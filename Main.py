@@ -175,7 +175,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
             index = 10
             val = next(iter(dataloader['val']))
             print(len(val))
-            x, y = val[index]
+            x, y = val
             x = x.to(device)
             y = y.to(device)
 
