@@ -7,7 +7,6 @@ import time
 import gc
 import numpy as np
 import matplotlib.pyplot as plt
-
 # created by Nitish Sandhu
 # date 05/feb/2021
 
@@ -180,9 +179,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
             y_ = y[0].to(device)
 
             print(x_.shape, y_.shape)
-            _, ax = plt.subplots(figsize=(20, 10))
-
-            ax.imshow(ground_masks_to_colorimg(y_.unsqueeze(0))/255.)
+            plt.imshow(ground_masks_to_colorimg(y_.unsqueeze(0))/255.)
             plt.show()
 
             time_elapsed = time.time() - epoch_b
