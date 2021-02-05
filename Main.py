@@ -182,7 +182,9 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
             print(x_.shape, y_.shape)
             plt.imshow(ground_masks_to_colorimg(y_.unsqueeze(0))/255.)
             plt.show()
-            outputs = unet(x_)
+            outputs = unet(x_.unsqueeze(0))
+            print(outputs.shape)
+
             _, preds = torch.max(outputs, 1)
             plt.imshow(ground_masks_to_colorimg(preds.unsqueeze(0)) / 255.)
             plt.show()
