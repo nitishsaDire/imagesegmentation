@@ -123,7 +123,8 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                 outputs = unet(inputs)
                                 print(outputs.shape)
                                 _, preds = torch.max(outputs, 1)
-                                loss = F.cross_entropy(preds, labels)
+                                print(preds.shape)
+                                loss = F.cross_entropy(outputs, labels)
                                 # backward + optimize only if in training phase
                                 if phase == 'train':
                                     loss.backward()
