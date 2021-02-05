@@ -123,11 +123,13 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                             # track history if only in train
                             with torch.set_grad_enabled(phase == 'train'):
                                 outputs = unet(inputs)
-                                print(outputs.shape)
+                                # torch.Size([20, 32, 224, 224])
+                                # torch.Size([20, 224, 224])
+                                # torch.Size([20, 224, 224])
+                                # print(outputs.shape)
                                 _, preds = torch.max(outputs, 1)
-                                print(preds.shape)
-                                print(labels.shape)
-                                print(type(labels))
+                                # print(preds.shape)
+                                # print(labels.shape)
                                 loss = F.cross_entropy(outputs.to(device), labels.type(torch.LongTensor).to(device))
                                 # backward + optimize only if in training phase
                                 if phase == 'train':
@@ -137,6 +139,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                             # statistics
                             running_loss += loss.item() * inputs.size(0)
                             running_corrects += torch.sum(preds == labels.data)
+                            print(torch.sum(preds == labels.data))
                             if count%10 == 0:
                                 time_elapsed = time.time() - it_begin
                                 print("Iterated over ", count, "LR=", scheduler.get_last_lr(),'Iteration Completed in {:.0f}m {:.0f}s'.format(
