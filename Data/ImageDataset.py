@@ -1,13 +1,14 @@
 from torch.utils.data.dataset import Dataset
 from torchvision import transforms
 from .ImageFile import *
-import os
 from PIL import Image
-import torch
 from sklearn import preprocessing
+from fastai import *
+from fastai.vision import *
 
 class ImageDataset(Dataset):
     def __init__(self, images_path, labels_path, extensions):
+        self.path = untar_data(URLs.CAMVID)
         self.images_path = images_path
         self.labels_path = labels_path
         self.extensions = extensions

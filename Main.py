@@ -15,9 +15,9 @@ def main():
                         type=int)
     args = parser.parse_args()
 
-    image_path =''
+    image_path ='/root/.fastai/data/camvid/images/'
     extensions = [".jpg", ".png"]
-    label_path = ''
+    label_path = '/root/.fastai/data/camvid/labels/'
     imageDataset = ImageDataset(image_path, label_path, extensions)
 
     train_size = int(0.8 * len(imageDataset))
