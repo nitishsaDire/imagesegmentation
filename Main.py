@@ -180,8 +180,9 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
             y_ = y[0].to(device)
 
             print(x_.shape, y_.shape)
+            _, ax = plt.subplots(figsize=(20, 10))
 
-            plt.imshow(ground_masks_to_colorimg(y_.unsqueeze(0))/255.)
+            ax.imshow(ground_masks_to_colorimg(y_.unsqueeze(0))/255.)
             plt.show()
 
             time_elapsed = time.time() - epoch_b
