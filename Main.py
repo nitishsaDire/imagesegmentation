@@ -42,7 +42,7 @@ def main():
     for i in unetModel.parameters():
         print(i.requires_grad)
 
-    optimizer = torch.optim.Adam(unetModel.parameters(), lr=0.01)
+    optimizer = torch.optim.Adam(unetModel.parameters(), lr=0.005)
 
     exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
 
