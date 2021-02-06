@@ -116,7 +116,9 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                 it_begin = time.time()
                             mask = mask.squeeze(1)
                             inputs, mask = inputs.to(device), mask.to(device)
-                            mask = torch.nn.functional.one_hot(mask.to(torch.int64), 32).permute(2,0,1)
+                            print(mask.shape)
+                            mask = torch.nn.functional.one_hot(mask.to(torch.int64), 32).permute(0,3,1,2)
+                            print(mask.shape)
 
                             # zero the parameter gradients
                             optimizer.zero_grad()
