@@ -41,8 +41,9 @@ class UNET_resnet34(nn.Module):
         # print(torch.cat((x4e, self.conv2d(512, 256)(self.upsample(x5e))), 1).shape)
         # print(self.conv2d(512, 256)(self.upsample(x5e)).shape)
         upp = self.upsample(x5e)
-        catt = torch.cat((x4e, self.conv2d(512, 256, kernel=3, padding=1)(upp)), 1)
-        print(x4e.shape, catt.shape, upp.shape)
+        convv = self.conv2d(512, 256, kernel=3, padding=1)(upp)
+        catt = torch.cat((x4e, convv), 1)
+        print(x4e.shape, catt.shape, upp.shape, convv.shape)
         x4d = self.conv2d(512, 256, kernel=3, padding=1)(catt)            #14x14,    256
         x3d = self.conv2d(256, 128, kernel=3, padding=1)(torch.cat((x3e, self.conv2d(256, 128, kernel=3, padding=1)(self.upsample(x4d))), 1))            #28x28,    128
         x2d = self.conv2d(128, 64, kernel=3, padding=1)(torch.cat((x2e, self.conv2d(128,  64, kernel=3, padding=1)(self.upsample(x3d))), 1))              #56x56,    64
