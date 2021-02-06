@@ -132,7 +132,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                 # torch.Size([20, 224, 224])
                                 # print(outputs.shape)
                                 _, preds = torch.max(outputs, 1)
-                                # print(preds.shape)
+                                print(preds.shape)
                                 # print(mask.shape)
                                 loss = F.binary_cross_entropy(outputs.to(device), mask.to(torch.float))
 
