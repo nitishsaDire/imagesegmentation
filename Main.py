@@ -237,7 +237,7 @@ color = np.array([list(np.random.choice(range(256), size=3)) for _ in range(32)]
 def ground_masks_to_colorimg(masks):
     colors = color
     # np.asarray([(242, 207, 1), (160, 194, 56), (201, 58, 64), (0, 152, 75), (101, 172, 228),(56, 34, 132)])
-
+    masks = masks.cpu()
     colorimg = np.ones((masks.shape[1], masks.shape[2], 3), dtype=np.float32) * 255
     channels, height, width = masks.shape
     count = 0
