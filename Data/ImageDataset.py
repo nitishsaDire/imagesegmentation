@@ -1,4 +1,3 @@
-from fastai import datasets
 from torch.utils.data.dataset import Dataset
 from torchvision import transforms
 from .ImageFile import *

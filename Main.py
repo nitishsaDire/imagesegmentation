@@ -52,6 +52,12 @@ def main():
     else :
         train_model(unetModel, optimizer, exp_lr_scheduler, dataloader, dataset_sizes, device)
 
+def denormalize(input):
+    mean = np.array([0.485, 0.456, 0.406])
+    std = np.array([0.229, 0.224, 0.225])
+    return std * input + mean
+
+
 def plot_stats(num_epochs, stats1, stats2):
     fig, ax = plt.subplots(figsize=(12,6))
     ax.plot(range(num_epochs), stats1['train'], marker='+', color='r', label='train_loss')
@@ -124,7 +130,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                             if count%100 == 0:
                                 indexx = 10
                                 img = inputs[indexx].cpu()
-                                plt.imshow(img.permute(1,2,0))
+                                plt.imshow(denormalize(img.permute(1,2,0)))
                                 plt.show()
                                 plt.imshow(masks_to_colorimg(mask[indexx]))
                                 plt.show()
