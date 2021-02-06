@@ -131,7 +131,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                             with torch.set_grad_enabled(phase == 'train'):
                                 outputs = unet(inputs)
                                 if count % 100 == 0:
-                                    plt.imshow(masks_to_colorimg(outputs[0]))
+                                    plt.imshow(masks_to_colorimg(outputs[0]/255.))
                                     plt.show()
                                 # torch.Size([20, 32, 224, 224])
                                 # torch.Size([20, 224, 224])
