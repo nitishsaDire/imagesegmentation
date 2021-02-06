@@ -219,19 +219,15 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
     return unet
 
 
-def dice_loss(inputs, targets, smooth=1):
+def dice_loss(pred, target, smooth=1.):
+    pred = pred.contiguous()
+    target = target.contiguous()
 
-        #comment out if your model contains a sigmoid or equivalent activation layer
-        # inputs = F.sigmoid(inputs)
+    intersection = (pred * target).sum(dim=2).sum(dim=2)
 
-        #flatten label and prediction tensors
-        inputs = inputs.view(-1)
-        targets = targets.view(-1)
+    loss = (1 - ((2. * intersection + smooth) / (pred.sum(dim=2).sum(dim=2) + target.sum(dim=2).sum(dim=2) + smooth)))
 
-        intersection = (inputs * targets).sum()
-        dice = (2.*intersection + smooth)/(inputs.sum() + targets.sum() + smooth)
-
-        return 1 - dice
+    return loss.mean()
 
 color = np.array([list(np.random.choice(range(256), size=3)) for _ in range(32)])
 
