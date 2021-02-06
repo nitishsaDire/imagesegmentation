@@ -132,7 +132,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                 outputs = unet(inputs)
                                 if count % 100 == 0:
                                     print(outputs[0].max(), outputs[0].min())
-                                    plt.imshow(masks_to_colorimg(outputs[0]/255.))
+                                    plt.imshow(masks_to_colorimg(outputs[0]))
                                     plt.show()
                                 # torch.Size([20, 32, 224, 224])
                                 # torch.Size([20, 224, 224])
