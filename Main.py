@@ -264,7 +264,7 @@ def masks_to_colorimg(masks):
 
     for y in range(height):
         for x in range(width):
-            selected_colors = colors[masks[:,y,x] > 0.5]
+            selected_colors = colors[masks[:,y,x] > 0.2]
 
             if len(selected_colors) > 0:
                 colorimg[y,x,:] = np.mean(selected_colors, axis=0)
