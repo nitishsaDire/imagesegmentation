@@ -141,8 +141,8 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                 _, preds = torch.max(outputs, 1)
                                 # print("pred",preds.shape)
                                 # print(mask.shape)
-                                loss = F.binary_cross_entropy_with_logits(outputs.to(device), mask.to(torch.float))
-
+                                # loss = F.binary_cross_entropy_with_logits(outputs.to(device), mask.to(torch.float))
+                                loss = dice_loss(outputs.to(device), mask.to(torch.float))
                                 # backward + optimize only if in training phase
                                 if phase == 'train':
                                     loss.backward()
