@@ -40,7 +40,7 @@ class UNET_resnet34(nn.Module):
         x4d = self.conv2d(512 + 256, 256, kernel=3, padding=1)(torch.cat((x4e, self.upsample(x5e)), 1))            #14x14,    256
         x3d = self.conv2d(256 + 128, 128, kernel=3, padding=1)(torch.cat((x3e, self.upsample(x4d)), 1))            #28x28,    128
         x2d = self.conv2d(128 + 64, 64, kernel=3, padding=1)(torch.cat((x2e, self.upsample(x3d)), 1))             #56x56,    64
-        x1d = self.conv2d(64, 64, kernel=3, padding=1)(torch.cat((x1e, self.upsample(x2d)), 1))                   #112x112,  64
+        x1d = self.conv2d(64+64, 64, kernel=3, padding=1)(torch.cat((x1e, self.upsample(x2d)), 1))                   #112x112,  64
 
         final = self.conv2d(64, self.n_classes)(self.upsample(x1d))
 
