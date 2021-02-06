@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 from torchvision import models
 
-
 # created by Nitish Sandhu
 # date 05/feb/2021
 
