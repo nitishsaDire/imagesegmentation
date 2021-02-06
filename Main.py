@@ -232,7 +232,7 @@ def dice_loss(inputs, targets, smooth=1):
 
         return 1 - dice
 
-color = [list(np.random.choice(range(256), size=3)) for _ in range(32)]
+color = np.array([list(np.random.choice(range(256), size=3)) for _ in range(32)])
 
 def ground_masks_to_colorimg(masks):
     colors = color
