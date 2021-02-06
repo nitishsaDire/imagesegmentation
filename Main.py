@@ -120,7 +120,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                             mask = torch.nn.functional.one_hot(mask.to(torch.int64), 32).permute(0,3,1,2)
                             if count%100 == 0:
                                 img = inputs[0].cpu()
-                                plt.imshow(img)
+                                plt.imshow(img.permute(1,2,0))
                                 plt.show()
                                 plt.imshow(masks_to_colorimg(mask[0]))
                                 plt.show()
