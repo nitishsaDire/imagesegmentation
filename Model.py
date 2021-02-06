@@ -33,7 +33,7 @@ class UNET_resnet34(nn.Module):
     def conv2d(self, in_channels, out_channels, kernel=1, stride=1, padding=0):
         return nn.Sequential(
             nn.Conv2d(in_channels, out_channels, kernel_size=kernel, stride=stride, padding=padding),
-            # nn.BatchNorm2d(out_channels),
+            nn.BatchNorm2d(out_channels),
             # nn.Dropout2d(p=self.dropout_p),
             nn.ReLU()).to(self.device)
 
@@ -64,4 +64,4 @@ class UNET_resnet34(nn.Module):
 
         final = self.conv2d_f(self.upsample(x1d))
 
-        return final
+        return self.softmax(final)
