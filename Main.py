@@ -235,7 +235,7 @@ def dice_loss(inputs, targets, smooth=1):
 color = np.array([list(np.random.choice(range(256), size=3)) for _ in range(32)])
 
 def ground_masks_to_colorimg(masks):
-    colors = color.cpu()
+    colors = color.cpu().numpy()
     # np.asarray([(242, 207, 1), (160, 194, 56), (201, 58, 64), (0, 152, 75), (101, 172, 228),(56, 34, 132)])
     masks = masks.cpu()
     colorimg = np.ones((masks.shape[1], masks.shape[2], 3), dtype=np.float32) * 255
@@ -244,7 +244,8 @@ def ground_masks_to_colorimg(masks):
     for y in range(height):
         for x in range(width):
             # print(int(masks[:,y,x]))
-            selected_colors = colors[int(masks[:,y,x])]
+            indices = int(masks[:,y,x])
+            selected_colors = colors[indices]
             # print(selected_colors)
             # if len(selected_colors) > 0:
             #     count +=1
