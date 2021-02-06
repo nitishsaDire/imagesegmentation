@@ -111,12 +111,13 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                     # Iterate over data.
                     count = 0
                     it_begin = time.time()
-                    for inputs, labels in dataloader[phase]:
+                    for inputs, mask in dataloader[phase]:
                             if (count+9)%10==0:
                                 it_begin = time.time()
-                            labels = labels.squeeze(1)
-                            inputs, labels = inputs.to(device), labels.to(device)
-                            labels = labels.to(torch.int64)
+                            mask = mask.squeeze(1)
+                            inputs, mask = inputs.to(device), mask.to(device)
+                            mask = torch.nn.functional.one_hot(mask.to(torch.int64), 32).permute(2,0,1)
+
                             # zero the parameter gradients
                             optimizer.zero_grad()
 
@@ -130,8 +131,8 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                 # print(outputs.shape)
                                 _, preds = torch.max(outputs, 1)
                                 # print(preds.shape)
-                                # print(labels.shape)
-                                loss = F.binary_cross_entropy(outputs.to(device), (torch.nn.functional.one_hot(labels, 32).transpose(1,-1)).to(torch.float))
+                                # print(mask.shape)
+                                loss = F.binary_cross_entropy(outputs.to(device), mask)
 
                                 # backward + optimize only if in training phase
                                 if phase == 'train':
@@ -140,8 +141,8 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
 
                             # statistics
                             running_loss += loss.item() * inputs.size(0)
-                            running_corrects += torch.sum(preds == labels.data)/(224*224)
-                            # print(torch.sum(preds == labels.data), running_corrects)
+                            running_corrects += torch.sum(preds == mask.data)/(224*224)
+                            # print(torch.sum(preds == mask.data), running_corrects)
                             if count%10 == 0:
                                 time_elapsed = time.time() - it_begin
                                 print("Iterated over ", count, "LR=", scheduler.get_last_lr(),'Iteration Completed in {:.0f}m {:.0f}s'.format(
@@ -207,6 +208,20 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
 
     return unet
 
+
+def dice_loss(inputs, targets, smooth=1):
+
+        #comment out if your model contains a sigmoid or equivalent activation layer
+        # inputs = F.sigmoid(inputs)
+
+        #flatten label and prediction tensors
+        inputs = inputs.view(-1)
+        targets = targets.view(-1)
+
+        intersection = (inputs * targets).sum()
+        dice = (2.*intersection + smooth)/(inputs.sum() + targets.sum() + smooth)
+
+        return 1 - dice
 
 color = [list(np.random.choice(range(256), size=3)) for _ in range(32)]
 
