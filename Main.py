@@ -116,9 +116,9 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                 it_begin = time.time()
                             mask = mask.squeeze(1)
                             inputs, mask = inputs.to(device), mask.to(device)
-                            print("mask1",mask.shape)
+                            # print("mask1",mask.shape)
                             mask = torch.nn.functional.one_hot(mask.to(torch.int64), 32).permute(0,3,1,2)
-                            print("mask2",mask.shape)
+                            # print("mask2",mask.shape)
 
                             # zero the parameter gradients
                             optimizer.zero_grad()
@@ -132,7 +132,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                 # torch.Size([20, 224, 224])
                                 # print(outputs.shape)
                                 _, preds = torch.max(outputs, 1)
-                                print("pred",preds.shape)
+                                # print("pred",preds.shape)
                                 # print(mask.shape)
                                 loss = F.binary_cross_entropy(outputs.to(device), mask.to(torch.float))
 
