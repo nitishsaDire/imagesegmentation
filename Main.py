@@ -257,6 +257,7 @@ def ground_masks_to_colorimg(masks):
 
 def masks_to_colorimg(masks):
     colors = color
+    masks = masks.cpu()
 
     colorimg = np.ones((masks.shape[1], masks.shape[2], 3), dtype=np.float32) * 255
     channels, height, width = masks.shape
