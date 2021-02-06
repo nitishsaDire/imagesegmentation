@@ -156,17 +156,17 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                         scheduler.step()
 
                     epoch_loss = running_loss / dataset_sizes[phase]
-                    epoch_acc = running_corrects.double() / dataset_sizes[phase]
+                    # epoch_acc = running_corrects.double() / dataset_sizes[phase]
 
                     epoch_losses[phase].append(epoch_loss)
-                    epoch_accuracies[phase].append(epoch_acc.item())
+                    # epoch_accuracies[phase].append(epoch_acc.item())
 
                     print('{} Loss: {:.4f} Acc: {:.4f}'.format(
-                        phase, epoch_loss, epoch_acc))
+                        phase, epoch_loss, 100))
 
                     # deep copy the model
-                    if phase == 'val' and epoch_acc > best_acc:
-                        best_acc = epoch_acc
+                    # if phase == 'val' and epoch_acc > best_acc:
+                    #     best_acc = epoch_acc
                         # best_model_wts_cnn, best_model_wts_lstm = copy.deepcopy(unet.state_dict()), copy.deepcopy(lstm.state_dict())
 
             # torch.save({
