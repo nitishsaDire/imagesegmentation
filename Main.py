@@ -144,8 +144,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                 _, preds = torch.max(outputs, 1)
                                 # print("pred",preds.shape)
                                 # print(mask.shape)
-                                # loss = F.binary_cross_entropy_with_logits(outputs.to(device), mask.to(torch.float))
-                                loss = dice_loss(outputs.to(device), mask.to(torch.float))
+                                loss = F.binary_cross_entropy_with_logits(outputs.to(device), mask.to(torch.float))
                                 # backward + optimize only if in training phase
                                 if phase == 'train':
                                     loss.backward()
@@ -221,16 +220,6 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
 
     return unet
 
-
-def dice_loss(pred, target, smooth=1.):
-    pred = pred.contiguous()
-    target = target.contiguous()
-
-    intersection = (pred * target).sum(dim=2).sum(dim=2)
-
-    loss = (1 - ((2. * intersection + smooth) / (pred.sum(dim=2).sum(dim=2) + target.sum(dim=2).sum(dim=2) + smooth)))
-
-    return loss.mean()
 
 color = np.array([list(np.random.choice(range(256), size=3)) for _ in range(32)])
 
