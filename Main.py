@@ -41,6 +41,7 @@ def main():
     unetModel = unetModel.to(device)
     for i in unetModel.parameters():
         print(i.requires_grad)
+    print(len(list(unetModel.parameters())))
 
     optimizer = torch.optim.Adam(unetModel.parameters(), lr=0.005)
 
