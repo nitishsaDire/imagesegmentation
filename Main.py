@@ -43,7 +43,7 @@ def main():
     #     print(i.requires_grad)
     print(len(list(unetModel.parameters())))
 
-    optimizer = torch.optim.Adam(unetModel.parameters(), lr=0.01)
+    optimizer = torch.optim.Adam(unetModel.parameters(), lr=0.001)
 
     exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=40, gamma=0.1)
 
@@ -67,7 +67,7 @@ def plot_stats(num_epochs, stats1, stats2):
     plt.legend()
     plt.show()
 
-def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, loadModel = False, num_epochs=25):
+def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, loadModel = False, num_epochs=100):
     since = time.time()
 
     OLD_PATH = ''
