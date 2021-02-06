@@ -39,8 +39,10 @@ def main():
 
     unetModel = UNET_resnet34(32)
     unetModel = unetModel.to(device)
+    for i in unetModel.parameters():
+        print(i.requires_grad)
 
-    optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, unetModel.parameters()), lr=0.01)
+    optimizer = torch.optim.Adam(unetModel.parameters(), lr=0.01)
 
     exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
 
