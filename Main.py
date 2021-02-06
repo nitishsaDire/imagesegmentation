@@ -183,23 +183,23 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
             #     'loss': loss
             # }, PATH)
 
-            index = 10
-            val = next(iter(dataloader['val']))
-            print(len(val))
-            x, y = val
-            x_ = x[0].to(device)
-            y_ = y[0].to(device)
-
-            print(x_.shape, y_.shape)
-            plt.imshow(ground_masks_to_colorimg(y_.unsqueeze(0))/255.)
-            plt.show()
-            outputs = unet(x_.unsqueeze(0))
-            print(outputs.shape)
-
-            _, preds = torch.max(outputs, 1)
-            print(preds.shape)
-            plt.imshow(ground_masks_to_colorimg(preds) / 255.)
-            plt.show()
+            # index = 10
+            # val = next(iter(dataloader['val']))
+            # print(len(val))
+            # x, y = val
+            # x_ = x[0].to(device)
+            # y_ = y[0].to(device)
+            #
+            # print(x_.shape, y_.shape)
+            # plt.imshow(ground_masks_to_colorimg(y_.unsqueeze(0))/255.)
+            # plt.show()
+            # outputs = unet(x_.unsqueeze(0))
+            # print(outputs.shape)
+            #
+            # _, preds = torch.max(outputs, 1)
+            # print(preds.shape)
+            # plt.imshow(ground_masks_to_colorimg(preds) / 255.)
+            # plt.show()
 
             time_elapsed = time.time() - epoch_b
             print('epoch completed in {:.0f}m {:.0f}s'.format(
