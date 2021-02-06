@@ -39,13 +39,13 @@ def main():
 
     unetModel = UNET_resnet34(32)
     unetModel = unetModel.to(device)
-    for i in unetModel.parameters():
-        print(i.requires_grad)
+    # for i in unetModel.parameters():
+    #     print(i.requires_grad)
     print(len(list(unetModel.parameters())))
 
-    optimizer = torch.optim.Adam(unetModel.parameters(), lr=0.005)
+    optimizer = torch.optim.Adam(unetModel.parameters(), lr=0.01)
 
-    exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
+    exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=40, gamma=0.1)
 
     if args.loadModelFlag > 0:
         train_model(unetModel, optimizer, exp_lr_scheduler, dataloader, dataset_sizes, device, loadModel=True, num_epochs=50)
