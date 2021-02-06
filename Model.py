@@ -35,7 +35,8 @@ class UNET_resnet34(nn.Module):
             nn.Conv2d(in_channels, out_channels, kernel_size=kernel, stride=stride, padding=padding),
             nn.BatchNorm2d(out_channels),
             # nn.Dropout2d(p=self.dropout_p),
-            nn.ReLU()).to(self.device)
+            nn.ReLU()
+        ).to(self.device)
 
     def conv2d_final(self, in_channels, out_channels, kernel=1, stride=1, padding=0):
         return nn.Sequential(

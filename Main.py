@@ -122,10 +122,11 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                             # print("mask1",mask.shape)
                             mask = torch.nn.functional.one_hot(mask.to(torch.int64), 32).permute(0,3,1,2)
                             if count%100 == 0:
-                                img = inputs[10].cpu()
+                                indexx = 10
+                                img = inputs[indexx].cpu()
                                 plt.imshow(img.permute(1,2,0))
                                 plt.show()
-                                plt.imshow(masks_to_colorimg(mask[10]))
+                                plt.imshow(masks_to_colorimg(mask[indexx]))
                                 plt.show()
                             # print("mask2",mask.shape)
 
@@ -138,7 +139,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                 outputs = unet(inputs)
                                 if count % 100 == 0:
                                     # print(outputs[0].max(), outputs[0].min())
-                                    plt.imshow(masks_to_colorimg(outputs[0]))
+                                    plt.imshow(masks_to_colorimg(outputs[indexx]))
                                     plt.show()
                                 # torch.Size([20, 32, 224, 224])
                                 # torch.Size([20, 224, 224])
