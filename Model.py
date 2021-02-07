@@ -69,10 +69,10 @@ class UNET_resnet34(nn.Module):
         x6e = self.conv2d_0(x5e)    # 4x4, 1024
         x7e = self.conv2d_01(x6e)   # 2x2, 2048
         x8e = self.adaptivePooling(x7e)   # 1x1, 2048
-        print(x5e.shape)
-        print(x6e.shape)
-        print(x7e.shape)
-        print(x8e.shape)
+        # print(x5e.shape)
+        # print(x6e.shape)
+        # print(x7e.shape)
+        # print(x8e.shape)
 
         x7d = self.conv2d_00d(torch.cat((x7e, self.upsample(x8e)), 1))      # 2x2,      2048
         x6d = self.conv2d_01d(torch.cat((x6e, self.upsample(x7d)), 1))      # 3x3,      1024
