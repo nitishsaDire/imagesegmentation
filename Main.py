@@ -77,7 +77,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
     since = time.time()
 
     OLD_PATH = '/content/drive/MyDrive/sem_is'
-    PATH = '/content/drive/MyDrive/sem_is'
+    PATH = '/content/drive/MyDrive/sem_is_2'
     epoch = 0
     if loadModel == True:
         checkpoint = torch.load(OLD_PATH)
