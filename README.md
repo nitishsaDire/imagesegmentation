@@ -1,8 +1,8 @@
 # Semantic image segmentation
-##Model
+## Model
 UNET model is implemented with ResNet-34 backbone.
 
-##Dataset
+## Dataset
 Cityscapes dataset
 ## Results
 
