@@ -67,6 +67,8 @@ class UNET_resnet34(nn.Module):
         x5e = self.seq5(x4e)        # 7x7, 512
         x6e = self.conv2d_0(x5e)    # 3x3, 1024
         x7e = self.conv2d_01(x6e)   # 1x1, 2048
+        print(x5e.shape)
+        print(x6e.shape)
         print(x7e.shape)
 
         x6d = self.conv2d_0d(torch.cat((x6e, self.upsample_3x3(x7e)), 1))   # 3x3,      1024
