@@ -76,8 +76,8 @@ def plot_stats(num_epochs, stats1, stats2):
 def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, loadModel = False, num_epochs=100):
     since = time.time()
 
-    OLD_PATH = ''
-    PATH = ''
+    OLD_PATH = '/content/drive/MyDrive/sem_is'
+    PATH = '/content/drive/MyDrive/sem_is'
     epoch = 0
     if loadModel == True:
         checkpoint = torch.load(OLD_PATH)
@@ -197,12 +197,12 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                     #     best_acc = epoch_acc
                         # best_model_wts_cnn, best_model_wts_lstm = copy.deepcopy(unet.state_dict()), copy.deepcopy(lstm.state_dict())
 
-            # torch.save({
-            #     'epoch': epoch,
-            #     'cnn_state_dict': unet.state_dict(),
-            #     'optimizer_state_dict': optimizer.state_dict(),
-            #     'loss': loss
-            # }, PATH)
+            torch.save({
+                'epoch': epoch,
+                'cnn_state_dict': unet.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'loss': loss
+            }, PATH)
 
             # index = 10
             # val = next(iter(dataloader['val']))
