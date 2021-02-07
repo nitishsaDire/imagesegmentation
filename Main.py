@@ -132,7 +132,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                 img = inputs[indexx].cpu()
                                 fig, ax = plt.subplots(figsize=(10, 10))
                                 plt.imshow(denormalize(img.permute(1,2,0)))
-                                plt.imshow(mask_1c[indexx], alpha = 0.5)
+                                plt.imshow(mask_1c[indexx].cpu(), alpha = 0.5)
                                 plt.show()
                             # print("mask2",mask.shape)
 
@@ -149,7 +149,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                     # print(outputs[0].max(), outputs[0].min())
                                     fig, ax = plt.subplots(figsize = (10,10))
                                     plt.imshow(denormalize(img.permute(1,2,0)))
-                                    plt.imshow(preds[indexx], alpha = 0.5)
+                                    plt.imshow(preds[indexx].cpu(), alpha = 0.5)
                                     plt.show()
                                 # torch.Size([20, 32, 224, 224])
                                 # torch.Size([20, 224, 224])
