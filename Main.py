@@ -48,7 +48,7 @@ def main():
     exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=40, gamma=0.1)
 
     if args.loadModelFlag > 0:
-        train_model(unetModel, optimizer, exp_lr_scheduler, dataloader, dataset_sizes, device, loadModel=True, num_epochs=50)
+        train_model(unetModel, optimizer, exp_lr_scheduler, dataloader, dataset_sizes, device, loadModel=True, num_epochs=200)
     else :
         train_model(unetModel, optimizer, exp_lr_scheduler, dataloader, dataset_sizes, device)
 
