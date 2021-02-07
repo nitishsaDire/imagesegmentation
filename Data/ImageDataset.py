@@ -16,7 +16,7 @@ class ImageDataset(Dataset):
         self.imageFilesPaths = imageFiles.get_files_paths()
         self.n = len(self.imageFilesPaths)
         self.le = preprocessing.LabelEncoder()
-        self.transforms = transforms.Compose([transforms.Resize((448,448)),
+        self.transforms = transforms.Compose([transforms.Resize((224,224)),
                                         transforms.ToTensor()
                                         ])
         self.normalize = transforms.Compose([transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])

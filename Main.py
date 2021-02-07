@@ -120,19 +120,19 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                     # Iterate over data.
                     count = 0
                     it_begin = time.time()
-                    for inputs, mask in dataloader[phase]:
+                    for inputs, mask_1c in dataloader[phase]:
                             if (count+9)%10==0:
                                 it_begin = time.time()
-                            mask = mask.squeeze(1)
-                            inputs, mask = inputs.to(device), mask.to(device)
+                            mask_1c = mask_1c.squeeze(1)
+                            inputs, mask_1c = inputs.to(device), mask_1c.to(device)
                             # print("mask1",mask.shape)
-                            mask = torch.nn.functional.one_hot(mask.to(torch.int64), 32).permute(0,3,1,2)
+                            mask = torch.nn.functional.one_hot(mask_1c.to(torch.int64), 32).permute(0,3,1,2)
                             if count%100 == 0:
                                 indexx = 10
                                 img = inputs[indexx].cpu()
+                                fig, ax = plt.subplots(figsize=(10, 10))
                                 plt.imshow(denormalize(img.permute(1,2,0)))
-                                plt.show()
-                                plt.imshow(masks_to_colorimg(mask[indexx]))
+                                plt.imshow(mask_1c[indexx], alpha = 0.5)
                                 plt.show()
                             # print("mask2",mask.shape)
 
@@ -143,15 +143,18 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                             # track history if only in train
                             with torch.set_grad_enabled(phase == 'train'):
                                 outputs = unet(inputs)
+                                _, preds = torch.max(outputs, 1)
+
                                 if count % 100 == 0:
                                     # print(outputs[0].max(), outputs[0].min())
-                                    plt.imshow(masks_to_colorimg(outputs[indexx]))
+                                    fig, ax = plt.subplots(figsize = (10,10))
+                                    plt.imshow(denormalize(img.permute(1,2,0)))
+                                    plt.imshow(preds[indexx], alpha = 0.5)
                                     plt.show()
                                 # torch.Size([20, 32, 224, 224])
                                 # torch.Size([20, 224, 224])
                                 # torch.Size([20, 224, 224])
                                 # print(outputs.shape)
-                                _, preds = torch.max(outputs, 1)
                                 # print("pred",preds.shape)
                                 # print(mask.shape)
                                 loss = F.binary_cross_entropy_with_logits(outputs.to(device), mask.to(torch.float))
