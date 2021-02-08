@@ -81,8 +81,8 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
         epoch_losses[k] = []
         epoch_accuracies[k] = []
 
-    OLD_PATH = '/content/drive/MyDrive/sem_is_2'
-    PATH = '/content/drive/MyDrive/sem_is_3'
+    OLD_PATH = '/content/drive/MyDrive/sem_is_dice_bce'
+    PATH = '/content/drive/MyDrive/sem_is_dice_bce'
     epoch = 0
     if loadModel == True:
         checkpoint = torch.load(OLD_PATH)
@@ -151,29 +151,30 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                             # forward
                             # track history if only in train
                             with torch.set_grad_enabled(phase == 'train'):
-                                outputs = unet(inputs)
-                                _, preds = torch.max(outputs, 1)
+                                    outputs = unet(inputs)
+                                    _, preds = torch.max(outputs, 1)
 
-                                if count % 100 == 0:
-                                    # print(outputs[0].max(), outputs[0].min())
-                                    fig, ax = plt.subplots(figsize = (10,10))
-                                    plt.imshow(denormalize(img.permute(1,2,0)))
-                                    plt.imshow(preds[indexx].cpu(), alpha = 0.5)
-                                    plt.show()
-                                    fig, ax = plt.subplots()
-                                    plt.imshow(masks_to_colorimg(outputs[indexx].cpu()))
-                                    plt.show()
-                                # torch.Size([20, 32, 224, 224])
-                                # torch.Size([20, 224, 224])
-                                # torch.Size([20, 224, 224])
-                                # print(outputs.shape)
-                                # print("pred",preds.shape)
-                                # print(mask.shape)
-                                loss = F.binary_cross_entropy_with_logits(outputs.to(device), mask.to(torch.float))
-                                # backward + optimize only if in training phase
-                                if phase == 'train':
-                                    loss.backward()
-                                    optimizer.step()
+                                    if count % 100 == 0:
+                                        # print(outputs[0].max(), outputs[0].min())
+                                        fig, ax = plt.subplots(figsize = (10,10))
+                                        plt.imshow(denormalize(img.permute(1,2,0)))
+                                        plt.imshow(preds[indexx].cpu(), alpha = 0.5)
+                                        plt.show()
+                                        fig, ax = plt.subplots()
+                                        plt.imshow(masks_to_colorimg(outputs[indexx].cpu()))
+                                        plt.show()
+                                    # torch.Size([20, 32, 224, 224])
+                                    # torch.Size([20, 224, 224])
+                                    # torch.Size([20, 224, 224])
+                                    # print(outputs.shape)
+                                    # print("pred",preds.shape)
+                                    # print(mask.shape)
+                                    # loss = F.binary_cross_entropy_with_logits(outputs.to(device), mask.to(torch.float))
+                                    loss = dice_loss(outputs.to(device), mask.to(torch.float))
+                                    # backward + optimize only if in training phase
+                                    if phase == 'train':
+                                        loss.backward()
+                                        optimizer.step()
 
                             # statistics
                             running_loss += loss.item() * inputs.size(0)
@@ -246,6 +247,15 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
     print('Best val Acc: {:4f}'.format(best_acc))
 
     return unet
+
+
+def dice_loss(pred, output, smooth=1.):
+    intersection = (pred * output).sum(dim=[2, 3])
+    union = pred.sum(dim=[2, 3]) + output.sum(dim=[2, 3])
+
+    loss = (1 - ((2.0 * intersection + smooth) / (union + smooth)))
+
+    return loss.mean()
 
 
 color = np.array([list(np.random.choice(range(256), size=3)) for _ in range(32)])
