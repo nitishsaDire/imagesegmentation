@@ -75,6 +75,11 @@ def plot_stats(num_epochs, stats1, stats2):
 
 def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, loadModel = False, num_epochs=100):
     since = time.time()
+    epoch_losses = {}
+    epoch_accuracies = {}
+    for k in ['train', 'val']:
+        epoch_losses[k] = []
+        epoch_accuracies[k] = []
 
     OLD_PATH = '/content/drive/MyDrive/sem_is_2'
     PATH = '/content/drive/MyDrive/sem_is_3'
@@ -85,6 +90,8 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         epoch = checkpoint['epoch']
         loss = checkpoint['loss']
+        epoch_losses = checkpoint['epoch_losses']
+        epoch_accuracies = checkpoint['epoch_accuracies']
         unet = unet.to(device)
 
     if loadModel == True:
@@ -93,11 +100,6 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
 
     # best_model_wts_cnn, best_model_wts_lstm = copy.deepcopy(unet.state_dict()), copy.deepcopy(lstm.state_dict())
     best_acc = 0.0
-    epoch_losses = {}
-    epoch_accuracies = {}
-    for k in ['train', 'val']:
-        epoch_losses[k] = []
-        epoch_accuracies[k] = []
 
     for epoch in range(epoch, num_epochs):
             epoch_b = time.time()
@@ -205,7 +207,9 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                 'epoch': epoch,
                 'cnn_state_dict': unet.state_dict(),
                 'optimizer_state_dict': optimizer.state_dict(),
-                'loss': loss
+                'loss': loss,
+                'epoch_losses': epoch_losses,
+                'epoch_accuracies': epoch_accuracies
             }, PATH)
 
             # index = 10
