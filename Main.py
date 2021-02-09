@@ -82,7 +82,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
         epoch_accuracies[k] = []
 
     OLD_PATH = '/content/drive/MyDrive/sem_is_dice_bce'
-    PATH = '/content/drive/MyDrive/sem_is_dice_bce1'
+    PATH = '/content/drive/MyDrive/sem_is_dice_bce'
     epoch = 0
     if loadModel == True:
         checkpoint = torch.load(OLD_PATH)
@@ -135,6 +135,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                             mask = torch.nn.functional.one_hot(mask_1c.to(torch.int64), 32).permute(0,3,1,2)
                             if count%100 == 0:
                                 indexx = 8
+                                print(phase)
                                 img = inputs[indexx].cpu()
                                 fig, ax = plt.subplots(figsize=(10, 10))
                                 plt.imshow(denormalize(img.permute(1,2,0)))
@@ -155,6 +156,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                     _, preds = torch.max(outputs, 1)
 
                                     if count % 100 == 0:
+                                        print(phase)
                                         # print(outputs[0].max(), outputs[0].min())
                                         fig, ax = plt.subplots(figsize = (10,10))
                                         plt.imshow(denormalize(img.permute(1,2,0)))
@@ -170,7 +172,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                     # print("pred",preds.shape)
                                     # print(mask.shape)
                                     # loss = F.binary_cross_entropy_with_logits(outputs.to(device), mask.to(torch.float))
-                                    loss = dice_loss(outputs.to(device), mask.to(torch.float))
+                                    loss = 0.5 * F.binary_cross_entropy_with_logits(outputs.to(device), mask.to(torch.float)) + 0.5 * dice_loss(outputs.to(device), mask.to(torch.float))
                                     # backward + optimize only if in training phase
                                     if phase == 'train':
                                         loss.backward()
