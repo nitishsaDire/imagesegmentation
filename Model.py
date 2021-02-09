@@ -84,4 +84,4 @@ class UNET_resnet34(nn.Module):
 
         final = self.conv2d_f(self.upsample(x1d))
 
-        return self.softmax(final)
+        return final
