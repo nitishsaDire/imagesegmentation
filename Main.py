@@ -172,7 +172,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                     # print("pred",preds.shape)
                                     # print(mask.shape)
                                     # loss = F.binary_cross_entropy_with_logits(outputs.to(device), mask.to(torch.float))
-                                    loss = 0.5 * F.binary_cross_entropy_with_logits(outputs.to(device), mask.to(torch.float)) + 0.5 * dice_loss(outputs.to(device), mask.to(torch.float))
+                                    loss = 0.66 * F.binary_cross_entropy_with_logits(outputs.to(device), mask.to(torch.float)) + 0.33 * dice_loss(outputs.to(device), mask.to(torch.float))
                                     # backward + optimize only if in training phase
                                     if phase == 'train':
                                         loss.backward()
