@@ -165,13 +165,6 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                         fig, ax = plt.subplots()
                                         plt.imshow(masks_to_colorimg(outputs[indexx].cpu()))
                                         plt.show()
-                                    # torch.Size([20, 32, 224, 224])
-                                    # torch.Size([20, 224, 224])
-                                    # torch.Size([20, 224, 224])
-                                    # print(outputs.shape)
-                                    # print("pred",preds.shape)
-                                    # print(mask.shape)
-                                    # loss = F.binary_cross_entropy_with_logits(outputs.to(device), mask.to(torch.float))
                                     loss = 0.66 * F.binary_cross_entropy_with_logits(outputs.to(device), mask.to(torch.float)) + 0.33 * dice_loss(outputs.to(device), mask.to(torch.float))
                                     # backward + optimize only if in training phase
                                     if phase == 'train':
@@ -180,9 +173,8 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
 
                             # statistics
                             running_loss += loss.item() * inputs.size(0)
-                            running_corrects += 10
-                                # torch.sum(preds == torch.max(mask.data, dim=1))/(224*224)
-                            # print(torch.sum(preds == mask.data), running_corrects)
+                            running_corrects += dice_accuracy(outputs.to(device), mask.to(torch.float)) * inputs.size(0)
+
                             if count%10 == 0:
                                 time_elapsed = time.time() - it_begin
                                 print("Iterated over ", count, "LR=", scheduler.get_last_lr(),'Iteration Completed in {:.0f}m {:.0f}s'.format(
@@ -193,18 +185,13 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                         scheduler.step()
 
                     epoch_loss = running_loss / dataset_sizes[phase]
-                    # epoch_acc = running_corrects.double() / dataset_sizes[phase]
+                    epoch_acc = running_corrects.double() / dataset_sizes[phase]
 
                     epoch_losses[phase].append(epoch_loss)
-                    # epoch_accuracies[phase].append(epoch_acc.item())
+                    epoch_accuracies[phase].append(epoch_acc.item())
 
                     print('{} Loss: {:.4f} Acc: {:.4f}'.format(
-                        phase, epoch_loss, 100))
-
-                    # deep copy the model
-                    # if phase == 'val' and epoch_acc > best_acc:
-                    #     best_acc = epoch_acc
-                        # best_model_wts_cnn, best_model_wts_lstm = copy.deepcopy(unet.state_dict()), copy.deepcopy(lstm.state_dict())
+                        phase, epoch_loss, epoch_acc))
 
             torch.save({
                 'epoch': epoch,
@@ -215,24 +202,6 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                 'epoch_accuracies': epoch_accuracies
             }, PATH)
 
-            # index = 10
-            # val = next(iter(dataloader['val']))
-            # print(len(val))
-            # x, y = val
-            # x_ = x[0].to(device)
-            # y_ = y[0].to(device)
-            #
-            # print(x_.shape, y_.shape)
-            # plt.imshow(ground_masks_to_colorimg(y_.unsqueeze(0))/255.)
-            # plt.show()
-            # outputs = unet(x_.unsqueeze(0))
-            # print(outputs.shape)
-            #
-            # _, preds = torch.max(outputs, 1)
-            # print(preds.shape)
-            # plt.imshow(ground_masks_to_colorimg(preds) / 255.)
-            # plt.show()
-
             time_elapsed = time.time() - epoch_b
             print('epoch completed in {:.0f}m {:.0f}s'.format(
                 time_elapsed // 60, time_elapsed % 60))
@@ -241,7 +210,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
             print(epoch_losses)
             print(epoch_accuracies)
             print('-'*30)
-            # plot_stats(epoch + 1, epoch_losses, epoch_accuracies)
+            plot_stats(epoch + 1, epoch_losses, epoch_accuracies)
 
     time_elapsed = time.time() - since
     print('Training complete in {:.0f}m {:.0f}s'.format(
@@ -259,24 +228,27 @@ def dice_loss(pred, output, smooth=1.):
 
     return loss.mean()
 
+def dice_accuracy(pred, output, smooth=1.):
+    intersection = (pred * output).sum(dim=[2, 3])
+    union = pred.sum(dim=[2, 3]) + output.sum(dim=[2, 3])
+
+    accuracy = ((2.0 * intersection + smooth) / (union + smooth))
+
+    return accuracy.mean()
+
 
 color = np.array([list(np.random.choice(range(256), size=3)) for _ in range(32)])
 
 def ground_masks_to_colorimg(masks):
     colors = color.cpu().numpy()
-    # np.asarray([(242, 207, 1), (160, 194, 56), (201, 58, 64), (0, 152, 75), (101, 172, 228),(56, 34, 132)])
     masks = masks.cpu()
     colorimg = np.ones((masks.shape[1], masks.shape[2], 3), dtype=np.float32) * 255
     channels, height, width = masks.shape
     count = 0
     for y in range(height):
         for x in range(width):
-            # print(int(masks[:,y,x]))
             indices = int(masks[:,y,x])
             selected_colors = colors[indices]
-            # print(selected_colors)
-            # if len(selected_colors) > 0:
-            #     count +=1
             colorimg[y,x,:] = selected_colors
     print(colorimg.min(), colorimg.max())
 
