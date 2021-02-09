@@ -45,7 +45,7 @@ def main():
 
     optimizer = torch.optim.Adam(unetModel.parameters(), lr=0.001)
 
-    exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
+    exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
 
     if args.loadModelFlag > 0:
         train_model(unetModel, optimizer, exp_lr_scheduler, dataloader, dataset_sizes, device, loadModel=True, num_epochs=200)
@@ -165,7 +165,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                         fig, ax = plt.subplots()
                                         plt.imshow(masks_to_colorimg(outputs[indexx].cpu()))
                                         plt.show()
-                                    loss =  F.binary_cross_entropy_with_logits(outputs.to(device), mask.to(torch.float))
+                                    loss =  F.binary_cross_entropy(outputs.to(device), mask.to(torch.float))
                                          # + 0.33 * dice_loss(outputs.to(device), mask.to(torch.float))
                                     # print("tsm",0.66 * F.binary_cross_entropy_with_logits(outputs.to(device), mask.to(torch.float)), 0.33 * dice_loss(outputs.to(device), mask.to(torch.float)))
                                     # backward + optimize only if in training phase
