@@ -43,7 +43,7 @@ def main():
     #     print(i.requires_grad)
     print(len(list(unetModel.parameters())))
 
-    optimizer = torch.optim.Adam(unetModel.parameters(), lr=0.001)
+    optimizer = torch.optim.Adam(unetModel.parameters(), lr=0.05)
 
     exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=40, gamma=0.1)
 
@@ -139,7 +139,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                 img = inputs[indexx].cpu()
                                 fig, ax = plt.subplots(figsize=(10, 10))
                                 plt.imshow(denormalize(img.permute(1,2,0)))
-                                plt.imshow(mask_1c[indexx].cpu(), alpha = 0.5)
+                                plt.imshow( mask_1c[indexx].cpu(), alpha = 0.5)
                                 plt.show()
                                 fig, ax = plt.subplots()
                                 plt.imshow(masks_to_colorimg(mask[indexx].cpu()))
