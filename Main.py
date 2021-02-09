@@ -45,7 +45,7 @@ def main():
 
     optimizer = torch.optim.Adam(unetModel.parameters(), lr=0.05)
 
-    exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.5)
+    exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=20, gamma=0.1)
 
     if args.loadModelFlag > 0:
         train_model(unetModel, optimizer, exp_lr_scheduler, dataloader, dataset_sizes, device, loadModel=True, num_epochs=200)
