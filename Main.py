@@ -179,7 +179,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
 
                             if count%10 == 0:
                                 time_elapsed = time.time() - it_begin
-                                print("Iterated over ", count, "LR=", scheduler.get_last_lr(),'Iteration Completed in {:.0f}m {:.0f}s'.format(
+                                print("IIterated over ", count, "LR=", scheduler.get_last_lr(),'Iteration Completed in {:.0f}m {:.0f}s'.format(
                                     time_elapsed // 60, time_elapsed % 60))
                             count+=1
 
