@@ -43,7 +43,7 @@ def main():
     #     print(i.requires_grad)
     print(len(list(unetModel.parameters())))
 
-    optimizer = torch.optim.Adam(unetModel.parameters(), lr=0.05)
+    optimizer = torch.optim.Adam(unetModel.parameters(), lr=0.001)
 
     exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=20, gamma=0.1)
 
@@ -178,7 +178,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                             running_corrects += dice_accuracy(outputs.to(device), mask.to(torch.float)) * inputs.size(0)
 
                             if count%10 == 0:
-                                time_elapsed = time.time() - it_begin
+                                time_elaqpsed = time.time() - it_begin
                                 print("IIterated over ", count, "LR=", scheduler.get_last_lr(),'Iteration Completed in {:.0f}m {:.0f}s'.format(
                                     time_elapsed // 60, time_elapsed % 60))
                             count+=1
