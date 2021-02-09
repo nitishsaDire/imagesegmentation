@@ -62,14 +62,14 @@ def plot_stats(num_epochs, stats1, stats2):
     fig, ax = plt.subplots(figsize=(12,6))
     ax.plot(range(num_epochs), stats1['train'], marker='+', color='r', label='train_loss')
     ax.plot(range(num_epochs), stats1['val'], marker='.', color='b', label='val_loss')
-    plt.xlim([0,30])
+    plt.xlim([0,200])
     plt.legend()
     plt.show()
 
     fig, ax = plt.subplots(figsize=(12,6))
     ax.plot(range(num_epochs), stats2['train'], marker='+', color='r', label='train_acc')
     ax.plot(range(num_epochs), stats2['val'], marker='.', color='b', label='val_acc')
-    plt.xlim([0,30])
+    plt.xlim([0,200])
     plt.legend()
     plt.show()
 
