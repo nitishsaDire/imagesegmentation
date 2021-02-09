@@ -31,7 +31,7 @@ def main():
 
     dataset_sizes = {x: len(imageDatasetDict[x]) for x in ['train', 'val']}
 
-    dataloader = {x: DataLoader(imageDatasetDict[x], batch_size=10,
+    dataloader = {x: DataLoader(imageDatasetDict[x], batch_size=20,
                             shuffle=True, num_workers=4, pin_memory=True) for x in ['train', 'val']}
     use_cuda = torch.cuda.is_available()  # check if GPU exists
     device = torch.device("cuda" if use_cuda else "cpu")  # use CPU or GPU
