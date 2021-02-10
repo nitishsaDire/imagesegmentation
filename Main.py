@@ -237,7 +237,7 @@ def iou(pred, target):
     pred = pred.cpu().contiguous().view(-1)
     # print(pred.shape)
     target = target.cpu().contiguous().view(-1)
-    return jaccard_similarity_score(pred, target)
+    return jaccard_similarity_score(pred.detach().numpy(), target.detach().numpy())
 
 color = np.array([list(np.random.choice(range(256), size=3)) for _ in range(32)])
 
