@@ -43,7 +43,7 @@ def main():
     #     print(i.requires_grad)
     print(len(list(unetModel.parameters())))
 
-    optimizer = torch.optim.Adam(unetModel.parameters(), lr=0.001)
+    optimizer = torch.optim.Adam(unetModel.parameters(), lr=0.01)
 
     exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
 
@@ -81,8 +81,8 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
         epoch_losses[k] = []
         epoch_accuracies[k] = []
 
-    OLD_PATH = '/content/drive/MyDrive/sem_is_dice_bce'
-    PATH = '/content/drive/MyDrive/sem_is_dice_bce'
+    OLD_PATH = '/content/drive/MyDrive/sem_is_dice-bce'
+    PATH = '/content/drive/MyDrive/sem_is_dice-bce'
     epoch = 0
     if loadModel == True:
         checkpoint = torch.load(OLD_PATH)
@@ -165,8 +165,8 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                         fig, ax = plt.subplots()
                                         plt.imshow(masks_to_colorimg(outputs[indexx].cpu()))
                                         plt.show()
-                                    loss =  F.binary_cross_entropy(outputs.to(device), mask.to(torch.float))
-                                         # + 0.33 * dice_loss(outputs.to(device), mask.to(torch.float))
+                                    loss =  0.7 * F.binary_cross_entropy(outputs.to(device), mask.to(torch.float))\
+                                            + 0.3 * dice_loss(outputs.to(device), mask.to(torch.float))
                                     # print("tsm",0.66 * F.binary_cross_entropy_with_logits(outputs.to(device), mask.to(torch.float)), 0.33 * dice_loss(outputs.to(device), mask.to(torch.float)))
                                     # backward + optimize only if in training phase
                                     if phase == 'train':
@@ -222,17 +222,17 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
     return unet
 
 
-def dice_loss(pred, output, smooth=1.):
-    intersection = (pred * output).sum(dim=[2, 3])
-    union = pred.sum(dim=[2, 3]) + output.sum(dim=[2, 3])
+def dice_loss(pred, target, smooth=1.):
+    intersection = (pred * target).sum(dim=[2, 3])
+    union = pred.sum(dim=[2, 3]) + target.sum(dim=[2, 3])
 
     loss = (1 - ((2.0 * intersection + smooth) / (union + smooth)))
 
     return loss.mean()
 
-def dice_accuracy(pred, output, smooth=1.):
-    intersection = (pred * output).sum(dim=[2, 3])
-    union = pred.sum(dim=[2, 3]) + output.sum(dim=[2, 3])
+def dice_accuracy(pred, target, smooth=1.):
+    intersection = (pred * target).sum(dim=[2, 3])
+    union = pred.sum(dim=[2, 3]) + target.sum(dim=[2, 3]) - intersection
 
     accuracy = ((2.0 * intersection + smooth) / (union + smooth))
 
