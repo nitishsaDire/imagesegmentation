@@ -47,12 +47,14 @@ def main():
 
     optimizer = torch.optim.Adam(unetModel.parameters(), lr=0.01)
 
-    exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
+    # exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
+    scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=0.01, steps_per_epoch=1, div_factor=5, epochs=200,
+                                                    anneal_strategy='linear')
 
     if args.loadModelFlag > 0:
-        train_model(unetModel, optimizer, exp_lr_scheduler, dataloader, dataset_sizes, device, loadModel=True, num_epochs=200)
+        train_model(unetModel, optimizer, scheduler, dataloader, dataset_sizes, device, loadModel=True, num_epochs=200)
     else :
-        train_model(unetModel, optimizer, exp_lr_scheduler, dataloader, dataset_sizes, device)
+        train_model(unetModel, optimizer, scheduler, dataloader, dataset_sizes, device)
 
 def denormalize(input):
     mean = np.array([0.485, 0.456, 0.406])
@@ -84,7 +86,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
         epoch_accuracies[k] = []
 
     OLD_PATH = '/content/drive/MyDrive/sem_is_dice-bce'
-    PATH = '/content/drive/MyDrive/sem_is_dice-bce'
+    PATH = '/content/drive/MyDrive/sem_is_dice-bce100'
     epoch = 0
     if loadModel == True:
         checkpoint = torch.load(OLD_PATH)
@@ -95,10 +97,13 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
         epoch_losses = checkpoint['epoch_losses']
         epoch_accuracies = checkpoint['epoch_accuracies']
         unet = unet.to(device)
+        scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=0.01, steps_per_epoch=1, div_factor=5,final_div_factor=10,
+                                                        epochs=100,anneal_strategy='linear')
 
-    if loadModel == True:
-        for g in optimizer.param_groups:
-            g['lr'] = 0.001
+
+    # if loadModel == True:
+    #     for g in optimizer.param_groups:
+    #         g['lr'] = 0.001
 
     # best_model_wts_cnn, best_model_wts_lstm = copy.deepcopy(unet.state_dict()), copy.deepcopy(lstm.state_dict())
     best_acc = 0.0
