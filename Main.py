@@ -92,7 +92,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
         checkpoint = torch.load(OLD_PATH)
         unet.load_state_dict(checkpoint['cnn_state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-        epoch = checkpoint['epoch']
+        epoch = checkpoint['epoch'] + 1
         loss = checkpoint['loss']
         epoch_losses = checkpoint['epoch_losses']
         epoch_accuracies = checkpoint['epoch_accuracies']
