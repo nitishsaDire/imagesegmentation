@@ -177,7 +177,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
 
                             # statistics
                             running_loss += loss.item() * inputs.size(0)
-                            running_corrects += iou(outputs.to(device), mask.to(torch.float)) * inputs.size(0)
+                            running_corrects += (1 - dice_loss(torch.sigmoid(outputs.to(device)), mask.to(torch.float))) * inputs.size(0)
 
                             if count%10 == 0:
                                 time_elapsed = time.time() - it_begin
@@ -189,7 +189,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                         scheduler.step()
 
                     epoch_loss = running_loss / dataset_sizes[phase]
-                    epoch_acc = running_corrects / dataset_sizes[phase]
+                    epoch_acc = running_corrects.double() / dataset_sizes[phase]
 
                     epoch_losses[phase].append(epoch_loss)
                     epoch_accuracies[phase].append(epoch_acc.item())
