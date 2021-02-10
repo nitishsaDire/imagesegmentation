@@ -85,8 +85,8 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
         epoch_losses[k] = []
         epoch_accuracies[k] = []
 
-    OLD_PATH = '/content/drive/MyDrive/sem_is_dice-bce'
-    PATH = '/content/drive/MyDrive/sem_is_dice-bce100'
+    OLD_PATH = '/content/drive/MyDrive/sem_is_dice-bce100'
+    PATH = '/content/drive/MyDrive/sem_is_dice-bce2'
     epoch = 0
     if loadModel == True:
         checkpoint = torch.load(OLD_PATH)
