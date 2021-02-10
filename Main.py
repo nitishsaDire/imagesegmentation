@@ -233,10 +233,10 @@ def dice_loss(pred, target, smooth=1e-5):
     return loss.mean()
 
 def iou(pred, target):
-    print(pred.shape, target.shape)
-    pred = pred.view(-1)
-    print(pred.shape)
-    target = target.view(-1)
+    # print(pred.shape, target.shape)
+    pred = pred.contiguous().view(-1)
+    # print(pred.shape)
+    target = target.contiguous().view(-1)
     return jaccard_similarity_score(pred, target)
 
 color = np.array([list(np.random.choice(range(256), size=3)) for _ in range(32)])
