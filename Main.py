@@ -7,6 +7,8 @@ import time
 import gc
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.metrics import jaccard_similarity_score
+
 
 # created by Nitish Sandhu
 # date 05/feb/2021
@@ -165,8 +167,8 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                         fig, ax = plt.subplots()
                                         plt.imshow(masks_to_colorimg(outputs[indexx].cpu()))
                                         plt.show()
-                                    loss =  0.7 * F.binary_cross_entropy(outputs.to(device), mask.to(torch.float))\
-                                            + 0.3 * dice_loss(outputs.to(device), mask.to(torch.float))
+                                    loss =  0.7 * F.binary_cross_entropy_with_logits(outputs.to(device), mask.to(torch.float))\
+                                            + 0.3 * dice_loss(torch.sigmoid(outputs.to(device)), mask.to(torch.float))
                                     # print("tsm",0.66 * F.binary_cross_entropy_with_logits(outputs.to(device), mask.to(torch.float)), 0.33 * dice_loss(outputs.to(device), mask.to(torch.float)))
                                     # backward + optimize only if in training phase
                                     if phase == 'train':
@@ -175,7 +177,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
 
                             # statistics
                             running_loss += loss.item() * inputs.size(0)
-                            running_corrects += dice_accuracy(outputs.to(device), mask.to(torch.float)) * inputs.size(0)
+                            running_corrects += iou(outputs.to(device), mask.to(torch.float)) * inputs.size(0)
 
                             if count%10 == 0:
                                 time_elapsed = time.time() - it_begin
@@ -222,7 +224,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
     return unet
 
 
-def dice_loss(pred, target, smooth=1.):
+def dice_loss(pred, target, smooth=1e-5):
     intersection = (pred * target).sum(dim=[2, 3])
     union = pred.sum(dim=[2, 3]) + target.sum(dim=[2, 3])
 
@@ -230,14 +232,10 @@ def dice_loss(pred, target, smooth=1.):
 
     return loss.mean()
 
-def dice_accuracy(pred, target, smooth=1.):
-    intersection = (pred * target).sum(dim=[2, 3])
-    union = pred.sum(dim=[2, 3]) + target.sum(dim=[2, 3]) - intersection
-
-    accuracy = ((2.0 * intersection + smooth) / (union + smooth))
-
-    return accuracy.mean()
-
+def iou(pred, target):
+    pred = pred.view(-1)
+    target = target.view(-1)
+    return jaccard_similarity_score(pred, target)
 
 color = np.array([list(np.random.choice(range(256), size=3)) for _ in range(32)])
 
