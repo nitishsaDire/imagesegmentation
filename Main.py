@@ -235,9 +235,15 @@ def dice_loss(pred, target, smooth=1e-5):
 def iou(pred, target):
     # print(pred.shape, target.shape)
     pred = pred.cpu().contiguous().view(-1)
-    # print(pred.shape)
-    target = target.cpu().contiguous().view(-1)
-    return jaccard_similarity_score(pred.detach().numpy(), target.detach().numpy())
+    jacs = []
+    for t in [0.2, 0.5, 0.8]:
+        target1 = (target > t).float()
+        # print(pred.shape)
+        target1 = target1.cpu().contiguous().view(-1)
+        jacs.append(jaccard_similarity_score(pred.detach().numpy(), target1.detach().numpy()))
+        print("t=",t,", iou=",jacs[-1])
+
+    return jacs[1]
 
 color = np.array([list(np.random.choice(range(256), size=3)) for _ in range(32)])
 
@@ -265,7 +271,7 @@ def masks_to_colorimg(masks):
 
     for y in range(height):
         for x in range(width):
-            selected_colors = colors[masks[:,y,x] > 0.2]
+            selected_colors = colors[masks[:,y,x] > 0.5]
 
             if len(selected_colors) > 0:
                 colorimg[y,x,:] = np.mean(selected_colors, axis=0)
