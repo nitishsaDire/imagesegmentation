@@ -233,7 +233,9 @@ def dice_loss(pred, target, smooth=1e-5):
     return loss.mean()
 
 def iou(pred, target):
+    print(pred.shape, target.shape)
     pred = pred.view(-1)
+    print(pred.shape)
     target = target.view(-1)
     return jaccard_similarity_score(pred, target)
 
