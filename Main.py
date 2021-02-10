@@ -234,10 +234,10 @@ def dice_loss(pred, target, smooth=1e-5):
 
 def iou(pred, target):
     # print(pred.shape, target.shape)
-    target = target.cpu().contiguous().view(-1)
+    target = target[0].cpu().contiguous().view(-1)
     jacs = []
     for t in [0.5]:
-        pred1 = (pred > t).float()
+        pred1 = (pred[0] > t).float()
         # print(pred.shape)
         pred1 = pred1.cpu().contiguous().view(-1)
         jacs.append(jaccard_similarity_score(target.detach().numpy(), pred1.detach().numpy()))
