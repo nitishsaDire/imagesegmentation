@@ -81,8 +81,8 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
         epoch_losses[k] = []
         epoch_accuracies[k] = []
 
-    OLD_PATH = '/content/drive/MyDrive/sem_is_2'
-    PATH = '/content/drive/MyDrive/sem_is_3'
+    OLD_PATH = '/content/drive/MyDrive/sem_is_2_l'
+    PATH = '/content/drive/MyDrive/sem_is_3_l'
     epoch = 0
     if loadModel == True:
         checkpoint = torch.load(OLD_PATH)
@@ -143,7 +143,6 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                 fig, ax = plt.subplots()
                                 plt.imshow(masks_to_colorimg(mask[indexx].cpu()))
                                 plt.show()
-                            # print("mask2",mask.shape)
 
                             # zero the parameter gradients
                             optimizer.zero_grad()
@@ -163,12 +162,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                     fig, ax = plt.subplots()
                                     plt.imshow(masks_to_colorimg(outputs[indexx].cpu()))
                                     plt.show()
-                                # torch.Size([20, 32, 224, 224])
-                                # torch.Size([20, 224, 224])
-                                # torch.Size([20, 224, 224])
-                                # print(outputs.shape)
-                                # print("pred",preds.shape)
-                                # print(mask.shape)
+
                                 loss = F.binary_cross_entropy_with_logits(outputs.to(device), mask.to(torch.float))
                                 # backward + optimize only if in training phase
                                 if phase == 'train':
@@ -178,8 +172,6 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                             # statistics
                             running_loss += loss.item() * inputs.size(0)
                             running_corrects += 10
-                                # torch.sum(preds == torch.max(mask.data, dim=1))/(224*224)
-                            # print(torch.sum(preds == mask.data), running_corrects)
                             if count%10 == 0:
                                 time_elapsed = time.time() - it_begin
                                 print("Iterated over ", count, "LR=", scheduler.get_last_lr(),'Iteration Completed in {:.0f}m {:.0f}s'.format(
@@ -198,11 +190,6 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                     print('{} Loss: {:.4f} Acc: {:.4f}'.format(
                         phase, epoch_loss, 100))
 
-                    # deep copy the model
-                    # if phase == 'val' and epoch_acc > best_acc:
-                    #     best_acc = epoch_acc
-                        # best_model_wts_cnn, best_model_wts_lstm = copy.deepcopy(unet.state_dict()), copy.deepcopy(lstm.state_dict())
-
             torch.save({
                 'epoch': epoch,
                 'cnn_state_dict': unet.state_dict(),
@@ -211,24 +198,6 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                 'epoch_losses': epoch_losses,
                 'epoch_accuracies': epoch_accuracies
             }, PATH)
-
-            # index = 10
-            # val = next(iter(dataloader['val']))
-            # print(len(val))
-            # x, y = val
-            # x_ = x[0].to(device)
-            # y_ = y[0].to(device)
-            #
-            # print(x_.shape, y_.shape)
-            # plt.imshow(ground_masks_to_colorimg(y_.unsqueeze(0))/255.)
-            # plt.show()
-            # outputs = unet(x_.unsqueeze(0))
-            # print(outputs.shape)
-            #
-            # _, preds = torch.max(outputs, 1)
-            # print(preds.shape)
-            # plt.imshow(ground_masks_to_colorimg(preds) / 255.)
-            # plt.show()
 
             time_elapsed = time.time() - epoch_b
             print('epoch completed in {:.0f}m {:.0f}s'.format(
@@ -259,12 +228,8 @@ def ground_masks_to_colorimg(masks):
     count = 0
     for y in range(height):
         for x in range(width):
-            # print(int(masks[:,y,x]))
             indices = int(masks[:,y,x])
             selected_colors = colors[indices]
-            # print(selected_colors)
-            # if len(selected_colors) > 0:
-            #     count +=1
             colorimg[y,x,:] = selected_colors
     print(colorimg.min(), colorimg.max())
 
