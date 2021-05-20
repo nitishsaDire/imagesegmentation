@@ -82,7 +82,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
         epoch_accuracies[k] = []
 
     OLD_PATH = '/content/drive/MyDrive/sem_is_4_l'
-    PATH = '/content/drive/MyDrive/sem_is_5_l'
+    PATH = '/content/drive/MyDrive/sem_is_Final'
     epoch = 0
     if loadModel == True:
         checkpoint = torch.load(OLD_PATH)
@@ -133,7 +133,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                             inputs, mask_1c = inputs.to(device), mask_1c.to(device)
                             # print("mask1",mask.shape)
                             mask = torch.nn.functional.one_hot(mask_1c.to(torch.int64), 32).permute(0,3,1,2)
-                            if count%100 == 0:
+                            if count%100 == 0 and epoch%5==0:
                                 indexx = 8
                                 img = inputs[indexx].cpu()
                                 fig, ax = plt.subplots(figsize=(10, 10))
@@ -153,7 +153,7 @@ def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, l
                                 outputs = unet(inputs)
                                 _, preds = torch.max(outputs, 1)
 
-                                if count % 100 == 0:
+                                if count % 100 == 0 and epoch%5==0:
                                     # print(outputs[0].max(), outputs[0].min())
                                     fig, ax = plt.subplots(figsize = (10,10))
                                     plt.imshow(denormalize(img.permute(1,2,0)))
