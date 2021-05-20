@@ -14,7 +14,7 @@ I used simple BCE loss.
 ![plot](./Data/Images/download%20(1).png)
 ![plot](./Data/Images/download%20(4).png)
 
-![plot](./Data/Images/download%20(5).png)
 ![plot](./Data/Images/download%20(6).png)
+![plot](./Data/Images/download%20(5).png)
 
 Original mask (left), generated mask (right)
