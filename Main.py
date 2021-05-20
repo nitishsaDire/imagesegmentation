@@ -73,7 +73,7 @@ def plot_stats(num_epochs, stats1, stats2):
     plt.legend()
     plt.show()
 
-def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, loadModel = False, num_epochs=100):
+def train_model(unet, optimizer, scheduler, dataloader, dataset_sizes, device, loadModel = False, num_epochs=200):
     since = time.time()
     epoch_losses = {}
     epoch_accuracies = {}
