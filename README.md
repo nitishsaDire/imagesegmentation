@@ -1,7 +1,7 @@
 # Semantic image segmentation
 ## Model
-UNET model is implemented with ResNet-34 backbone.
-
+UNET architecture is implemented with ResNet-34 backbone.
+Reason for UNET is because it combines the low level and high level features.
 ## Dataset
 Camvid dataset
 ## Results
@@ -9,7 +9,8 @@ Camvid dataset
 ![plot](./Data/Images/download%20(7).png)
 
 Train loss vs validation loss over 200 epochs. 
-I used simple BCE loss.
+I used simple BCE loss. Another model with loss function Dice+BCE loss is also
+trained, please check colab_bce_dice branch.
 
 ![plot](./Data/Images/download%20(1).png)
 ![plot](./Data/Images/download%20(4).png)
